@@ -19,18 +19,19 @@ router.route("/logout").get(logoutUser);
 // user liked videos
 router.route("/user/liked").get(authenticateUser,getLikedVideo);
 router.route("/user/liked").post(authenticateUser,addToLike);
-router.route("/user/liked").delete(authenticateUser,removeFromLike);
+router.route("/user/liked/:id").delete(authenticateUser,removeFromLike);
 
 // user history 
 router.route("/user/history").get(authenticateUser,getAllHistory);
 router.route("/user/history").post(authenticateUser,addToHistory);
+router.route("/user/clear/history").delete(authenticateUser,clearHistory);
 router.route("/user/history/:id").delete(authenticateUser,removeFromHistory);
-router.route("/user/history/clear").delete(authenticateUser,clearHistory);
+
 
 // watch later
 router.route("/user/watchlater").get(authenticateUser,getAllWatchLater);
 router.route("/user/watchlater").post(authenticateUser,addToWatchLater);
-router.route("/user/watchlater").delete(authenticateUser,removeFromWatchLater);
+router.route("/user/watchlater/:id").delete(authenticateUser,removeFromWatchLater);
 
 
 export default router

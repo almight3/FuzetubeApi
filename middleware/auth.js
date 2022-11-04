@@ -1,7 +1,6 @@
 import User from "../model/user.js";
 import catchAsyncError from "../middleware/catchAsyncError.js";
 import ErrorHandler from "../utils/errorHandler.js";
-import sendToken from "../utils/sendToken.js";
 import jwt from "jsonwebtoken";
 
 export const authenticateUser = catchAsyncError(async (req,res,next)=>{

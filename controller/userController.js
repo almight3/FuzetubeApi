@@ -61,14 +61,14 @@ export const getLikedVideo = catchAsyncError(async(req,res,next)=>{
 
 // liked video 
 export const addToLike = catchAsyncError(async(req,res,next)=>{
-      const {id} = req.user._id;
       const {video} = req.body;
-      const user = await User.findById(id);
+      const user = await User.findById(req.user._id);
       const isVideoExist = user.like.some((item)=>item._id === video._id)
       
       if(!isVideoExist){
         user.like.push(video)
       }
+      user.save()
       res.status(201).json({
        success:true,
        likes:user.like
@@ -77,11 +77,11 @@ export const addToLike = catchAsyncError(async(req,res,next)=>{
 
 // removed from like
 export const removeFromLike = catchAsyncError(async(req,res,next)=>{
-    const {id} = req.user._id;
-    const {videoId} = req.body.videoID;
-    const user = await User.findById(id);
-    const filteredLike = user.like.filter((item)=>item._id !== videoId);
-    await User.findByIdAndUpdate(id,{like:filteredLike})
+
+    const {id} = req.params   
+     const user = await User.findById(req.user._id);
+    const filteredLike = user.like.filter((item)=>item._id !== id);
+    await User.findByIdAndUpdate(req.user._id,{like:filteredLike})
     res.status(200).json({
         success:true,
         likes:filteredLike
@@ -101,11 +101,12 @@ export const getAllHistory = catchAsyncError(async(req,res,next)=>{
 
 // add to item history
 export const addToHistory = catchAsyncError(async(req,res,next)=>{
+    const {video} = req.body;
     const user = await User.findById(req.user._id);
-    const isVideoExist = user.history.some((item)=>item.id === req.body.id)
+    const isVideoExist = user.history.some((item)=>item.id === video._id)
     
     if(!isVideoExist){
-      user.history.push(req.body)
+      user.history.push(video)
     }
     user.save()
     res.status(201).json({
@@ -118,7 +119,7 @@ export const addToHistory = catchAsyncError(async(req,res,next)=>{
 export const removeFromHistory = catchAsyncError(async(req,res,next)=>{
     const {id} = req.params
     const user = await User.findById(req.user._id);
-    const filterHistory = user.history.filter((item)=>item.id !== id);
+    const filterHistory = user.history.filter((item)=>item._id !== id);
     await User.findByIdAndUpdate(req.user._id,{history:filterHistory})
     res.status(200).json({
         success:true,
@@ -128,8 +129,10 @@ export const removeFromHistory = catchAsyncError(async(req,res,next)=>{
 
 // clear History
 export const clearHistory = catchAsyncError(async(req,res,next)=>{
-    const {id} = req.user._id;
-    const user = await User.findByIdandUpdate(id,{history:[]});
+    const user = await User.findById(req.user._id);
+    const arr = []
+    await User.findByIdAndUpdate(req.user._id,{history:arr})
+    console.log(user.history)
     res.status(200).json({
         success:true,
         history:user.history
@@ -138,43 +141,37 @@ export const clearHistory = catchAsyncError(async(req,res,next)=>{
 
 // fetch all videos in watchlater
 export const getAllWatchLater = catchAsyncError(async(req,res,next)=>{
-      const {id} = req.user._id;
-      const user = await User.findById(id);
-
-      res.status(200).json({
+        const user = await User.findById(req.user._id);
+        res.status(200).json({
         success:true,
-        history:user.history
+        watchLater:user.watchLater
       });
 
 });
 
 // add videos to watch later 
 export const addToWatchLater =  catchAsyncError(async(req,res,next)=>{
-    const {id} = req.user._id;
     const {video} = req.body;
-    const user = await User.findById(id);
+    const user = await User.findById(req.user._id);
     const isVideoExist = user.watchLater.some((item)=>item._id === video._id);
     
-    if(isVideoExist){
-      return next(new ErrorHandler(409,"video is already present in watchlater"))
-    }
-    else{
+    if(!isVideoExist){
         user.watchLater.push(video)
-    };
+    }
+    user.save()
     res.status(201).json({
      success:true,
-     likes:user.like
+     watchLater:user.watchLater
     });
 });
 
 
 // remove from watchlater
 export const removeFromWatchLater = catchAsyncError(async(req,res,next)=>{
-    const {id} = req.user._id;
-    const {videoId} = req.body.videoID;
-    const user = await User.findById(id);
-    const filterWatchLater = user.watchLater.filter((item)=>item._id !== videoId);
-    await User.findByIdAndUpdate(id,{watchLater:filterWatchLater})
+    const {id} = req.params;
+    const user = await User.findById(req.user._id);
+    const filterWatchLater = user.watchLater.filter((item)=>item._id !== id);
+    await User.findByIdAndUpdate(req.user._id,{watchLater:filterWatchLater})
     res.status(200).json({
         success:true,
         watchLater:filterWatchLater

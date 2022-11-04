@@ -22,81 +22,101 @@ const userSchema = new Schema({
         minLength:[8,"password must be character long"],
         selected:false  
     },
-    like:[{ 
-        id:{
-        type:String,
-        required:[true,"video id is required"]
-      },
-    title:{
-        type:String,
-        required:[true,"video title is required"]
-     },
-    description:{
-        type:String,
-        required:[true,"video discription is required"]
-     },
-    category:{
-        type:String,
-        required:[true,"video category is required"]
-     },
-    profile:{
-        type:String,
-        required:[true,"video category is required"]
-     },
-    }],
-    history:[
-        {
-           id:{
-               type:String,
-               required:[true,"video id is required"]
-           },
-           title:{
-               type:String,
-               required:[true,"video title is required"]
-           },
-           description:{
-               type:String,
-               required:[true,"video discription is required"]
-           },
-           category:{
-               type:String,
-               required:[true,"video category is required"]
-           },
-           profile:{
-               type:String,
-               required:[true,"video category is required"]
-           },
-           createdAt:{
-               type:Date,
-               default:Date.now()
-           }}
+    like:[ { 
+        _id:{
+          type:String,
+          required:[true,"video id is required"]
+        },
+      title:{
+          type:String,
+          required:[true,"video title is required"]
+       },
+      description:{
+          type:String,
+          required:[true,"video discription is required"]
+       },
+      category:{
+          type:String,
+          required:[true,"video category is required"]
+       },
+      profile:{
+          type:String,
+          required:[true,"video category is required"]
+       },
+       channel:{
+          type:String,
+          required:[true,"channel is required"]
+       },
+       thumbnail:{
+          type:String
+       }  
+      }
     ],
-    watchLater:[
-        {
-         id:{
+    history:[
+        { 
+          _id:{
             type:String,
             required:[true,"video id is required"]
-        },
+          },
         title:{
             type:String,
             required:[true,"video title is required"]
-        },
+         },
         description:{
             type:String,
             required:[true,"video discription is required"]
-        },
+         },
         category:{
             type:String,
             required:[true,"video category is required"]
-        },
+         },
         profile:{
             type:String,
             required:[true,"video category is required"]
-        },
-        createdAt:{
+         },
+         channel:{
+            type:String,
+            required:[true,"channel is required"]
+         },
+         thumbnail:{
+            type:String
+         }  
+        }
+    ],
+    watchLater:[
+        { 
+            _id:{
+              type:String,
+              required:[true,"video id is required"]
+            },
+          title:{
+              type:String,
+              required:[true,"video title is required"]
+           },
+          description:{
+              type:String,
+              required:[true,"video discription is required"]
+           },
+          category:{
+              type:String,
+              required:[true,"video category is required"]
+           },
+          profile:{
+              type:String,
+              required:[true,"video category is required"]
+           },
+           channel:{
+              type:String,
+              required:[true,"channel is required"]
+           },
+           thumbnail:{
+              type:String
+           },
+           addedAt:{
             type:Date,
             default:Date.now()
-        }}
+           }
+        }
     ],
     playlist:[{
         name:{
@@ -145,7 +165,7 @@ userSchema.methods.generateJWT = function (){
 
 // compare password 
 userSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+    return await bcrypt.compare(password,this.password);
 };
 
 const User = mongoose.model("User",userSchema)
