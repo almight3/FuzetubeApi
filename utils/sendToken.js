@@ -11,7 +11,7 @@ const sendToken = (userData,statusCode,res)=>{
       email:userData.email,
       username:userData.username,
     }
-   res.status(statusCode).cookies("fuzetube",token,options).json({
+   res.status(statusCode).cookie("fuzetube",token,options).json({
     success:true,
     user,
    })
