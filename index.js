@@ -19,7 +19,7 @@ mongoose.connect(process.env.DB_URL).then(res=>{
     console.log(err)
 })
 
-app.use(cors({origin:"http://localhost:3000", credentials:true}))
+app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/v1",userRoutes)       
