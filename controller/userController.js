@@ -27,11 +27,10 @@ export const  loginUser = catchAsyncError(async(req,res,next)=>{
     if(!user){
        return next(new ErrorHandler("Invalid email or password",401))
     };
-    const isPasswordMatch = await user.comparePassword(password)
-    if(isPasswordMatch ){
-        sendToken(user,201,res);
-    };
-    return next(new ErrorHandler("Invalid email or password",401))
+   
+    sendToken(user,201,res);
+   
+    
     
 });
 
