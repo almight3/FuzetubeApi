@@ -22,17 +22,17 @@ export  const register = catchAsyncError(async(req,res,next)=>{
 export const  loginUser = catchAsyncError(async(req,res,next)=>{
     const {email,password} = req.body;
 
-    const user = await User.findOne({email:email}).select("+password");
+    const user = await User.findOne({email:email})
     
     if(!user){
        return next(new ErrorHandler("Invalid email or password",401))
     };
     const isPasswordMatch = await user.comparePassword(password)
-    if(!isPasswordMatch ){
-        return next(new ErrorHandler("Invalid email or password",401))
+    if(isPasswordMatch ){
+        sendToken(user,201,res);
     };
-
-    sendToken(user,201,res);
+    return next(new ErrorHandler("Invalid email or password",401))
+    
 });
 
 //logout user
