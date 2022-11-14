@@ -153,7 +153,8 @@ userSchema.pre("save", async function(req,res,next){
     if(!this.isModified("password")){
         next();
     }
-    this.password = await bcrypt.hash(this.password,10)
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password,salt)
 })
 
 // genreate jwt
@@ -164,8 +165,8 @@ userSchema.methods.generateJWT = function (){
 }
 
 // compare password 
-userSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password,this.password);
+userSchema.methods.comparePassword = async function (enterPassword) {
+    return await bcrypt.compare(enterPassword,this.password);
 };
 
 const User = mongoose.model("User",userSchema)
