@@ -7,7 +7,7 @@ import userRoutes from "./routes/userRoutes.js";
 import videoRoutes from "./routes/videosRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors"
-
+import bodyParser from "body-parser"
 // config env
 dotenv.config()
 //db connection 
@@ -20,8 +20,8 @@ mongoose.connect(process.env.DB_URL).then(res=>{
 })
 
 app.use(cors())
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
 app.use("/api/v1",userRoutes)       
 app.use("/api/v1",videoRoutes)   
 app.use(errorMiddleware);

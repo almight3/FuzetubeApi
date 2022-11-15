@@ -49,8 +49,7 @@ export const logoutUser  = catchAsyncError(async(req,res,next)=>{
 
 // fetch liked videos
 export const getLikedVideo = catchAsyncError(async(req,res,next)=>{
-      const {id} = req.user._id;
-      const user = await User.findById(id);
+      const user = await User.findById(req.user._id);
 
       res.status(200).json({
         success:true,
@@ -61,6 +60,7 @@ export const getLikedVideo = catchAsyncError(async(req,res,next)=>{
 // liked video 
 export const addToLike = catchAsyncError(async(req,res,next)=>{
       const {video} = req.body;
+      console.log(req.body)
       const user = await User.findById(req.user._id);
       const isVideoExist = user.like.some((item)=>item._id === video._id)
       
@@ -89,8 +89,7 @@ export const removeFromLike = catchAsyncError(async(req,res,next)=>{
 
 // history fetch all history
 export const getAllHistory = catchAsyncError(async(req,res,next)=>{
-  
-      const user = await User.findById(req.user._id);
+        const user = await User.findById(req.user._id);
         res.status(200).json({
         success:true,
         history:user.history
@@ -100,12 +99,13 @@ export const getAllHistory = catchAsyncError(async(req,res,next)=>{
 
 // add to item history
 export const addToHistory = catchAsyncError(async(req,res,next)=>{
+     
     const {video} = req.body;
+    console.log(req.user._id)
     const user = await User.findById(req.user._id);
     const isVideoExist = user.history.some((item)=>item.id === video._id)
-    
-    if(!isVideoExist){
-      user.history.push(video)
+    if(!isVideoExist ){
+        user.history.push(video)
     }
     user.save()
     res.status(201).json({
@@ -129,9 +129,8 @@ export const removeFromHistory = catchAsyncError(async(req,res,next)=>{
 // clear History
 export const clearHistory = catchAsyncError(async(req,res,next)=>{
     const user = await User.findById(req.user._id);
-    const arr = []
-    await User.findByIdAndUpdate(req.user._id,{history:arr})
-    console.log(user.history)
+    await User.findByIdAndUpdate(req.user._id,{history:[]})
+    user.save()
     res.status(200).json({
         success:true,
         history:user.history
