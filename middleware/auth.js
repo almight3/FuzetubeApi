@@ -5,9 +5,9 @@ import jwt from "jsonwebtoken";
 
 export const authenticateUser = catchAsyncError(async (req,res,next)=>{
 
-    const authHeader = req.headers.authorization
-    const token = authHeader.split(" ")[1]
-      if(token==="null") {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(" ")[1];
+    if(!token || token === "null") {
       return next(new ErrorHandler("Please Login to access this resource", 401));
     }
     const decodedData = jwt.verify(token, process.env.JWT_SECRET);
