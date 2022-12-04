@@ -133,7 +133,7 @@ export const clearHistory = catchAsyncError(async(req,res,next)=>{
     user.save()
     res.status(200).json({
         success:true,
-        history:user.history
+        history:[]
     });
 });
 
